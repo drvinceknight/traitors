@@ -279,23 +279,30 @@ class TestTraitorsGame:
             backstab.TraitorsGame(10, 0)
 
     def test_always_terminates(self):
-        random.seed(42)
-        r = backstab.TraitorsGame(10, 2).simulate(n=200)
+        r = backstab.TraitorsGame(10, 2).simulate(n=200, seed=42)
         assert r.faithful_wins + r.traitor_wins == 200
 
     def test_win_rates_sum_to_one(self):
-        random.seed(42)
-        r = backstab.TraitorsGame(15, 3).simulate(n=500)
+        r = backstab.TraitorsGame(15, 3).simulate(n=500, seed=42)
         assert r.faithful_win_rate + r.traitor_win_rate == pytest.approx(1.0)
 
+    def test_simulation_is_random(self):
+        r_with_seed_0 = backstab.TraitorsGame(10, 2).simulate(n=200, seed=0)
+        r_with_seed_1 = backstab.TraitorsGame(10, 2).simulate(n=200, seed=1)
+        assert r_with_seed_0 != r_with_seed_1
+
     def test_vl_matches_rv(self):
-        random.seed(42)
         rv = backstab.TraitorsGame(15, 2, detect=False).simulate(
-            faithful=backstab.RandomVote(), traitor=backstab.RandomVote(), n=5000
+            faithful=backstab.RandomVote(),
+            traitor=backstab.RandomVote(),
+            n=5000,
+            seed=42,
         )
-        random.seed(42)
         fo = backstab.TraitorsGame(15, 2, detect=True).simulate(
-            faithful=backstab.FixedOrder(), traitor=backstab.FixedOrder(), n=5000
+            faithful=backstab.FixedOrder(),
+            traitor=backstab.FixedOrder(),
+            n=5000,
+            seed=42,
         )
         assert abs(rv.faithful_win_rate - fo.faithful_win_rate) < 0.05
 

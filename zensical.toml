@@ -1,0 +1,45 @@
+[project]
+site_name = "backstab"
+site_description = "Game-theoretic analysis and Monte Carlo simulation of The Traitors"
+docs_dir = "docs"
+
+[project.theme]
+variant = "modern"
+
+features = [
+  "content.code.copy",
+  "content.tabs.link",
+  "navigation.sections",
+  "navigation.top",
+]
+
+[plugins.search]
+
+[plugins.mkdocstrings.handlers.python]
+paths = ["src"]
+
+[plugins.mkdocstrings.handlers.python.options]
+docstring_style = "google"
+show_source = true
+show_root_heading = true
+show_root_full_path = false
+members_order = "source"
+
+nav = [
+    {Home = "index.md"},
+    {Tutorials = [
+        {"First simulation" = "tutorials/first-simulation.md"}
+    ]},
+    {"How-to guides" = [
+        {"Compare strategies" = "how-to/compare-strategies.md"},
+        {"Analyse deviations" = "how-to/analyse-deviation.md"},
+        {"Run parameter sweeps" = "how-to/run-sweeps.md"}
+    ]},
+    {Reference = [
+        {"API" = "reference/api.md"}
+    ]},
+    {Explanation = [
+        {"The game model" = "explanation/game-model.md"},
+        {"The FixedOrder protocol" = "explanation/fixed-order-protocol.md"}
+    ]}
+]

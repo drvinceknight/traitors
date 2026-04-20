@@ -24,6 +24,7 @@ def compare(
     n_players: int = 22,
     n_traitors: int = 3,
     n_sims: int = 10000,
+    seed: int = None,
 ) -> dict[str, SimulationResults]:
     """Run the four canonical strategy profiles and return labelled results.
 
@@ -41,7 +42,7 @@ def compare(
     for label, (faithful_strat, traitor_strat, use_detect) in configs.items():
         game = TraitorsGame(n_players, n_traitors, detect=use_detect)
         results[label] = game.simulate(
-            faithful=faithful_strat, traitor=traitor_strat, n=n_sims
+            faithful=faithful_strat, traitor=traitor_strat, n=n_sims, seed=seed
         )
     return results
 
@@ -94,6 +95,7 @@ def threshold_sweep(
     n_traitors: int = 3,
     n_sims: int = 10000,
     thresholds: list[int] | None = None,
+    seed: int | None = None,
 ) -> list[dict[str, Any]]:
     """Sweep ThresholdDeviation thresholds and return win rates per threshold.
 
@@ -105,7 +107,9 @@ def threshold_sweep(
 
     rows: list[dict[str, Any]] = []
     game = TraitorsGame(n_players, n_traitors, detect=True)
-    baseline = game.simulate(faithful=FixedOrder(), traitor=FixedOrder(), n=n_sims)
+    baseline = game.simulate(
+        faithful=FixedOrder(), traitor=FixedOrder(), n=n_sims, seed=seed
+    )
     rows.append(
         {
             "threshold": "never",
@@ -119,7 +123,9 @@ def threshold_sweep(
     for tau in thresholds:
         game = TraitorsGame(n_players, n_traitors, detect=True)
         strategy = ThresholdDeviation(threshold=tau, p_late=1.0)
-        result = game.simulate(faithful=FixedOrder(), traitor=strategy, n=n_sims)
+        result = game.simulate(
+            faithful=FixedOrder(), traitor=strategy, n=n_sims, seed=seed
+        )
         rows.append(
             {
                 "threshold": tau,
@@ -137,6 +143,7 @@ def ramp_sweep(
     n_players: int = 22,
     n_traitors: int = 3,
     n_sims: int = 10000,
+    seed: int | None = None,
 ) -> list[dict[str, Any]]:
     """Sweep ten (p_start, p_end) RampDeviation configurations.
 
@@ -159,7 +166,9 @@ def ramp_sweep(
     for p_start, p_end in configs:
         game = TraitorsGame(n_players, n_traitors, detect=True)
         strategy = RampDeviation(p_start=p_start, p_end=p_end, n_total=n_players)
-        result = game.simulate(faithful=FixedOrder(), traitor=strategy, n=n_sims)
+        result = game.simulate(
+            faithful=FixedOrder(), traitor=strategy, n=n_sims, seed=seed
+        )
         rows.append(
             {
                 "p_start": p_start,

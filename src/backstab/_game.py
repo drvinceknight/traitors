@@ -150,6 +150,7 @@ class TraitorsGame:
         traitor: VotingStrategy | None = None,
         murder: MurderStrategy | None = None,
         n: int = 10000,
+        seed: int | None = None,
     ) -> SimulationResults:
         """Run n simulations and return aggregate results."""
         if faithful is None:
@@ -159,6 +160,7 @@ class TraitorsGame:
         if murder is None:
             murder = RandomMurder()
 
+        random.seed(seed)
         results = SimulationResults(
             n_simulations=n,
             faithful_wins=0,

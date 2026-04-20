@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments and uv
+.venv/
+venv/
+env/
+
+# Testing and coverage
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+*.log
+
+# LaTeX build artefacts
+tex/*.aux
+tex/*.fdb_latexmk
+tex/*.fls
+tex/*.log
+tex/*.out
+tex/*.xdv
+tex/*.synctex.gz
+tex/*.bbl
+tex/*.blg
+tex/*.toc
+tex/*.lof
+tex/*.lot
+
+# Generated figures and simulation data (reproducible from tex/main.py)
+tex/*.pdf
+tex/*.png
+tex/data/
+
+# MkDocs generated site
+site/
+
+# macOS
+.DS_Store
