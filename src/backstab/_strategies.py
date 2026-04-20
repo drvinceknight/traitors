@@ -113,7 +113,9 @@ class MixedDeviation:
                 voter, alive, seating, traitors, is_traitor, history, known_traitors
             )
         if random.random() < self.p:
-            faithful_players = [player for player in alive if player not in traitors and player != voter]
+            faithful_players = [
+                player for player in alive if player not in traitors and player != voter
+            ]
             if len(faithful_players) > 0:
                 return random.choice(faithful_players)
         return self._fixed_order.vote(
@@ -171,7 +173,9 @@ class RampDeviation:
             )
         deviation_prob = self._current_p(len(alive))
         if random.random() < deviation_prob:
-            faithful_players = [player for player in alive if player not in traitors and player != voter]
+            faithful_players = [
+                player for player in alive if player not in traitors and player != voter
+            ]
             if len(faithful_players) > 0:
                 return random.choice(faithful_players)
         return self._fixed_order.vote(
@@ -215,7 +219,9 @@ class ThresholdDeviation:
                 voter, alive, seating, traitors, is_traitor, history, known_traitors
             )
         if len(alive) <= self.threshold and random.random() < self.p_late:
-            faithful_players = [player for player in alive if player not in traitors and player != voter]
+            faithful_players = [
+                player for player in alive if player not in traitors and player != voter
+            ]
             if len(faithful_players) > 0:
                 return random.choice(faithful_players)
         return self._fixed_order.vote(
@@ -253,7 +259,9 @@ class OptimalTimingDeviation:
         n_alive = len(alive)
         n_traitors_alive = sum(1 for player in alive if player in traitors)
         if deviation_is_profitable(n_alive, n_traitors_alive):
-            faithful_players = [player for player in alive if player not in traitors and player != voter]
+            faithful_players = [
+                player for player in alive if player not in traitors and player != voter
+            ]
             if len(faithful_players) > 0:
                 return random.choice(faithful_players)
         return self._fixed_order.vote(
