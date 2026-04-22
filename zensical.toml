@@ -3,28 +3,6 @@ site_name = "backstab"
 site_description = "Game-theoretic analysis and Monte Carlo simulation of The Traitors"
 docs_dir = "docs"
 
-[project.theme]
-variant = "modern"
-
-features = [
-  "content.code.copy",
-  "content.tabs.link",
-  "navigation.sections",
-  "navigation.top",
-]
-
-[plugins.search]
-
-[plugins.mkdocstrings.handlers.python]
-paths = ["src"]
-
-[plugins.mkdocstrings.handlers.python.options]
-docstring_style = "google"
-show_source = true
-show_root_heading = true
-show_root_full_path = false
-members_order = "source"
-
 nav = [
     {Home = "index.md"},
     {Tutorials = [
@@ -40,6 +18,31 @@ nav = [
     ]},
     {Explanation = [
         {"The game model" = "explanation/game-model.md"},
-        {"The FixedOrder protocol" = "explanation/fixed-order-protocol.md"}
+        {"The FixedOrder protocol" = "explanation/fixed-order-protocol.md"},
+        {"The Migdal recurrence" = "explanation/migdal-recurrence.md"}
     ]}
 ]
+
+[project.theme]
+variant = "modern"
+logo = "assets/logo.svg"
+favicon = "assets/favicon.svg"
+
+features = [
+  "content.code.copy",
+  "content.tabs.link",
+  "navigation.sections",
+  "navigation.top",
+]
+
+[plugins.search]
+
+[plugins.mkdocstrings.handlers.python]
+paths = ["src"]
+
+[plugins.mkdocstrings.handlers.python.options]
+docstring_style = "numpy"
+show_source = true
+show_root_heading = true
+show_root_full_path = false
+members_order = "source"
