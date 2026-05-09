@@ -48,3 +48,10 @@ site/
 
 # dvc
 .dvc/
+
+# checkpoints
+*ipynb_checkpoints*
+
+# Data
+tex/src/fig_strategy_comparison/main.csv
+tex/src/fig_strategy_comparison/store.csv
