@@ -45,3 +45,6 @@ site/
 
 # macOS
 .DS_Store
+
+# dvc
+.dvc/

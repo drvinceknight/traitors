@@ -1,6 +1,7 @@
 # Run your first simulation
 
-In this tutorial you will install backstab, run a Monte Carlo simulation of a Traitors season, and read the results. You will have a working simulation by the end.
+In this tutorial you will install backstab, run a Monte Carlo simulation of a Traitors
+season, and read the results. You will have a working simulation by the end.
 
 No prior knowledge of game theory is required. You only need Python 3.11 or later.
 
@@ -12,13 +13,6 @@ No prior knowledge of game theory is required. You only need Python 3.11 or late
 $ python -m pip install backstab
 ```
 
-Verify the installation:
-
-```python
-import backstab
-print(backstab.__version__)
-```
-
 ---
 
 ## 2. Create a game
@@ -27,8 +21,8 @@ A game is defined by its total number of players and the number of Traitors amon
 The standard British season has 22 players and 3 Traitors.
 
 ```python
->>> from backstab import TraitorsGame
->>> game = TraitorsGame(n_players=22, n_traitors=3)
+>>> import backstab
+>>> game = backstab.TraitorsGame(n_players=22, n_traitors=3)
 >>> print(game)
 TraitorsGame(n=22, m=3)
 
@@ -49,9 +43,9 @@ SimulationResults(n=1000, P(F)=0.244 [0.217,0.271], avg_rounds=9.2)
 
 The output shows:
 
-- `P(F)` - the fraction of games won by the Faithful
-- `[low, hi]` - the 95% confidence interval for that fraction
-- `avg_rounds` - the mean number of voting rounds per game
+- `P(F)` — the fraction of games won by the Faithful
+- `[low, hi]` — the 95% confidence interval for that fraction
+- `avg_rounds` — the mean number of voting rounds per game
 
 ---
 
@@ -76,14 +70,14 @@ Average rounds:    9.2
 
 ## 5. Try a different strategy
 
-By default both sides play `FixedOrder`.
-Try replacing the Traitors with `Collusion`: all Traitors coordinate on the same target each round:
+By default both sides play `FixedOrder`. Try replacing the Traitors with `Collusion`:
+all Traitors coordinate on the same target each round:
 
 ```python
->>> from backstab import FixedOrder, Collusion
+>>> import backstab
 >>> results_collusion = game.simulate(
-...     faithful=FixedOrder(),
-...     traitor=Collusion(),
+...     faithful=backstab.FixedOrder(),
+...     traitor=backstab.Collusion(),
 ...     n=1000,
 ... )
 >>> print(f"With collusion:    {results_collusion.faithful_win_rate:.1%}")
@@ -92,19 +86,20 @@ With collusion:    100.0%
 Without collusion: 24.4%
 >>> game.detect = False
 >>> results_collusion_without_detection = game.simulate(
-...     faithful=FixedOrder(),
-...     traitor=Collusion(),
+...     faithful=backstab.FixedOrder(),
+...     traitor=backstab.Collusion(),
 ...     n=1000,
 ... )
->>> print(f"With collusion but not detection:    {results_collusion_without_detection.faithful_win_rate:.1%}")
+>>> rate = results_collusion_without_detection.faithful_win_rate
+>>> print(f"With collusion but not detection:    {rate:.1%}")
 With collusion but not detection:    0.0%
 
 ```
 
-You should see the highest Faithful win rate under collusion: the Faithful identify
-the Traitors as they are no longer voting in a `FixedOrder` approach. With
-collusion that win rate goes down, finally it is at its lowest when the Faithful
-no longer detect collusion.
+You should see the highest Faithful win rate under collusion: the Faithful identify the
+Traitors as they are no longer voting in a `FixedOrder` approach. With collusion that
+win rate goes down, finally it is at its lowest when the Faithful no longer detect
+collusion.
 
 ---
 

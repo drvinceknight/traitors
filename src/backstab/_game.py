@@ -1,5 +1,6 @@
 import random
 from collections import Counter
+from fractions import Fraction
 
 from backstab._analysis import traitor_win_prob
 from backstab._detection import detect_deviations
@@ -181,12 +182,15 @@ class TraitorsGame:
 
         return results
 
-    def exact(self) -> dict[str, float | int]:
-        """Exact winning probabilities under random play (Migdal 2010)."""
+    def exact(self) -> dict[str, Fraction | int]:
+        """Exact winning probabilities under random play (Migdal 2010).
+
+        Returns rational `Fraction` values, not floats.
+        """
         traitor_win = traitor_win_prob(self.n_players, self.n_traitors)
         return {
             "traitor_win": traitor_win,
-            "faithful_win": 1.0 - traitor_win,
+            "faithful_win": Fraction(1) - traitor_win,
             "n": self.n_players,
             "m": self.n_traitors,
         }

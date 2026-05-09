@@ -26,6 +26,10 @@ Complete reference for every public symbol in `backstab`.
 
 ::: backstab.deviation_is_profitable
 
+::: backstab.faithful_deviate_value
+
+::: backstab.faithful_deviation_is_profitable
+
 ::: backstab.deviation_benefit_bound
 
 ::: backstab.deviation_cost

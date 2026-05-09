@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="backstab logo">
+  <title>backstab</title>
+
+  <defs>
+    <marker id="stab" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="5.5" markerHeight="5.5" orient="auto">
+      <path d="M 0 0 L 12 6 L 0 12 Z" fill="#b2182b"/>
+    </marker>
+    <marker id="comply" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4.2" markerHeight="4.2" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#2166ac" opacity="0.55"/>
+    </marker>
+  </defs>
+
+  <rect width="256" height="256" rx="40" ry="40" fill="#f5efe3"/>
+
+  <circle cx="128" cy="128" r="82" fill="none" stroke="#c7bda8" stroke-width="1.2" stroke-dasharray="3 4"/>
+
+  <g fill="none" stroke="#2166ac" stroke-width="2.6" opacity="0.6" stroke-linecap="round">
+    <path d="M 140 49 A 82 82 0 0 1 191 79" marker-end="url(#comply)"/>
+    <path d="M 207 99 A 82 82 0 0 1 207 157" marker-end="url(#comply)"/>
+    <path d="M 191 177 A 82 82 0 0 1 140 207" marker-end="url(#comply)"/>
+    <path d="M 116 207 A 82 82 0 0 1 65 177" marker-end="url(#comply)"/>
+    <path d="M 49 157 A 82 82 0 0 1 49 99" marker-end="url(#comply)"/>
+  </g>
+
+  <g stroke="#1e3a5f" stroke-width="2">
+    <circle cx="128" cy="46"  r="14" fill="#2166ac"/>
+    <circle cx="199" cy="87"  r="14" fill="#2166ac"/>
+    <circle cx="199" cy="169" r="14" fill="#2166ac"/>
+    <circle cx="128" cy="210" r="14" fill="#2166ac"/>
+    <circle cx="57"  cy="169" r="14" fill="#2166ac"/>
+  </g>
+
+  <circle cx="57" cy="87" r="15" fill="#b2182b" stroke="#6b1114" stroke-width="2"/>
+
+  <line x1="71" y1="98" x2="183" y2="160"
+        stroke="#b2182b" stroke-width="5.5" stroke-linecap="round"
+        marker-end="url(#stab)"/>
+</svg>

@@ -6,8 +6,6 @@
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{enumitem}
 \usepackage{microtype}
-\usepackage{tikz}
-\usetikzlibrary{shapes.geometric,arrows.meta,positioning,calc}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
@@ -24,17 +22,6 @@ Strategy for the Faithful in Social Deduction Games}
 \date{\today}
 
 \begin{document}
-
-% TODO BEFORE SUBMISSION: archive tex/src/deviation_sweep/deviation_gain_sweep.csv
-% on Zenodo, then replace every reference to the "supplementary material" /
-% "exact-rational evaluation sweep" / "deviation_gain_sweep.csv" /
-% "tex/src/deviation_sweep/main.py" with the Zenodo DOI.
-% Call sites to update:
-%   1. Introduction, Contributions paragraph (first mention of the file).
-%   2. Statement of Theorem 1 ("the exact-rational evaluation sweep distributed with").
-%   3. Proof of Theorem 1: both "archived as deviation_gain_sweep.csv ..." and
-%      the verification-script path "tex/src/deviation_sweep/main.py".
-% Theorem 2 is now fully analytical and no longer references the CSV.
 
 \maketitle
 
@@ -111,9 +98,17 @@ and define the optimal late-game strategy \(\sigma^\dagger\)
 (Section~\ref{sec:timing}). Third, we show that Vote-Left raises the
 Faithful's winning probability by a factor of approximately three relative
 to random voting under collusion. Fourth, we release \texttt{backstab},
-an open-source Python library that implements exact arithmetic for known
-theoretical measures and a Monte Carlo engine to simulate seasons of
-the show.
+an open-source Python library; we describe it below.
+
+\textbf{The \texttt{backstab} library.} We release \texttt{backstab} as
+an open-source Python library accompanying this paper. It provides exact
+rational arithmetic for all three recurrences
+(Propositions~\ref{prop:migdal}--\ref{prop:vlopt}) and a Monte Carlo
+engine for simulating \(\mathrm{TG}(n, m)\) under any combination of
+voting strategies. Releasing documented, tested software alongside a
+paper is now regarded as a component of good scientific practice
+\cite{wilson2014,taschuk2017}, and all numerical results in this paper
+are fully reproducible from the library and the accompanying scripts.
 
 A typical season features $n \in \{20, \ldots, 25\}$ players with
 $m \in \{3, 4\}$ Traitors. Across approximately 80 international seasons,
@@ -199,6 +194,13 @@ the next surviving player after~\(i\) in the cyclic ordering.
 
 \subsection{Baseline winning probability}
 
+The main result of this paper (Theorem~\ref{thm:pbe}) characterises
+equilibrium play through the Vote-Left protocol with punishment. The
+propositions below are supporting technical results: exact recurrence
+formulas for the Traitor win probability under each strategy profile,
+along with the strategic constraints that govern when each strategy is
+optimal.
+
 The following recurrence, due to Migda\l{}~\cite{migdal2010}, gives the
 exact Traitor win probability under mutual random play. We restate it here
 for completeness, using the parity win condition of
@@ -211,8 +213,8 @@ state \((n,m)\).  Then
 \begin{equation}\label{eq:migdal}
 w(n,m) = \begin{cases}
   0 & \text{if } m = 0, \\
-  1 & \text{if } m \geq \lceil n/2 \rceil, \\[4pt]
-  \dfrac{n-m}{n}\,w(n-2,m) \;+\; \dfrac{m}{n}\,w(n-2,m-1) & \text{otherwise.}
+  1 & \text{if } n \leq 2m, \\[4pt]
+  \dfrac{n-m}{n}\,w(n-2,m) \;+\; \dfrac{m}{n}\,w(n-2,m-1) & \text{if } n > 2m.
 \end{cases}
 \end{equation}
 \end{proposition}
@@ -305,37 +307,38 @@ value under compliance therefore equals the random-play value,
 \(V_{\mathrm{comply}}(n_t, m_t) = w(n_t, m_t)\). This is the quantity
 that any deviation must be compared against.
 
-\begin{lemma}[No profitable deviation for a Faithful]\label{lemma:faithful}
-Under \(\sigma^*\), if a Faithful player \(i\) deviates from Vote-Left, 
-their individual winning probability becomes 0.
+\begin{lemma}[Faithful incentive compatibility]\label{lemma:faithful}
+Under \(\sigma^*\), a Faithful player has no profitable deviation.
+Equivalently, any deviation results in immediate detection and punishment
+with banishment, rendering the deviating player unable to win.
 \end{lemma}
 
 \begin{proof}
-If \(i\) deviates, the deviation is publicly observable (since votes are
-deterministic under compliance). The state transitions to
-\(\mathtt{punish}(i)\), and in the next day phase, all players vote for
-\(i\), so \(i\) is banished with probability 1. A banished player cannot
-win, so \(i\)'s individual winning probability is 0. Under compliance, \(i\)
-is not banished in this round, so their winning probability is strictly
-positive. Thus, deviation is irrational.
+Suppose Faithful player \(i\) deviates from Vote-Left in any state. Since
+votes are deterministic under \(\sigma^*\), the deviation is publicly
+observable. The state transitions to \(\mathtt{punish}(i)\), and in the
+next day phase all players vote for \(i\), so \(i\) is banished with
+probability 1. A banished player cannot win, so \(i\)'s winning probability
+becomes 0. Under compliance, \(i\) is not banished in this round, so their
+winning probability is strictly positive. Thus deviation is irrational.
 \end{proof}
 
-\begin{lemma}[No profitable deviation for a Traitor]\label{lemma:traitor}
-Under \(\sigma^*\), if a Traitor player \(i\) deviation from Vote-Left in a state
-with \(n > 2m + 2\) implies that their individual winning probability becomes 0.
+\begin{lemma}[Traitor incentive compatibility]\label{lemma:traitor}
+Under \(\sigma^*\), when \(n > 2m + 2\), a Traitor player has no
+profitable deviation. The punishment threat is credible: sufficient
+Faithful remain to outvote and eliminate the deviator.
 \end{lemma}
 
 \begin{proof}
-If \(i\) deviates, the deviation is publicly observable. The state transitions
-    to \(\mathtt{punish}(i)\) with \(n - 1\) players and \(m\) Traitors.
-    The night phase leads to \(n - 2\) players and \(m\) Traitors.
-    This leads to the next day phase with \(n - 2 - m\) Faithful. They can punish the
-    \(i\) if and only if \(n - 2 - m > m \Leftrightarrow n > 2m +2\).
-    If this condition does not hold then all players vote for \(i\), so \(i\) is
-banished with probability 1. A banished player cannot win, so \(i\)'s
-individual winning probability is 0. Under compliance, \(i\) is not banished
-in this round, so their winning probability is strictly positive. Thus,
-deviation is irrational.
+Suppose Traitor \(i\) deviates in a state \((n, m)\) with \(n > 2m + 2\).
+The deviation is publicly observable, so the state transitions to
+\(\mathtt{punish}(i)\). After the following night phase, there are \(n - 2\)
+players with \(m\) Traitors, leaving \(n - 2 - m\) Faithful. Since \(n > 2m +
+2\), we have \(n - 2 > 2m\), so \(n - 2 - m > m\). The Faithful therefore
+outnumber the remaining Traitors. Under \(\mathtt{punish}(i)\), all players
+vote for \(i\) in the next day phase, so \(i\) is banished with probability 1.
+Since banishment prevents victory, \(i\)'s winning probability is 0, whereas
+under compliance it is strictly positive. Thus deviation is irrational.
 \end{proof}
 
 \begin{theorem}[Perfect Bayesian Equilibrium]\label{thm:pbe}
@@ -366,129 +369,308 @@ deviation becomes individually rational.
 
 \textbf{Optimal late-game strategy.} We define \(\sigma^\dagger\) as the
 strategy that complies with Vote-Left whenever \(n_t > 2m_t + 2\) and
-deviates via full collusion when \(n_t \leq 2m_t + 2\). This is
-implemented as \texttt{OptimalTimingDeviation} in \texttt{backstab}. For
+deviates via full collusion when \(n_t \leq 2m_t + 2\). For
 the televised range \(m_t \in \{2, 3, 4\}\) the late-game threshold is
 \(n_t \leq 6\), \(8\), or \(10\) respectively, corresponding to one to
 three rounds near the end of a typical season. We assess the empirical
 effect of \(\sigma^\dagger\) in Section~\ref{sec:sim}.
+
+\subsection{Collusion banishment probability} 
+\label{sec:collusion-banishment}
+
+For strategy profiles in which the Traitors all vote for the same Faithful
+target \(T^* \in F\) (in particular, RV+C), Migda\l{}-style recurrences for 
+the Traitor win probability require the probability that the day-phase banishment 
+lands on a Faithful.
+
+\begin{lemma}[Collusion banishment probability]\label{lemma:collusion} 
+Let \(n \in \mathbb{N}\) be the total number of players and let
+\(m \in \{0,\dots,n\}\) denote the number of Traitors. Define the
+Faithful set
+\[
+F=\{0,\dots,n-m-1\},
+\]
+and suppose all Traitors collude by voting for the same Faithful target
+\(T^\ast = 0\).
+
+Each Faithful player votes independently and uniformly at random among
+all players except themselves. Let
+\[
+\Omega
+=
+\left\{
+v=(v_i)_{i\in F}\in \{0,\dots,n-1\}^{n-m}
+:
+v_i\neq i
+\text{ for all } i\in F
+\right\}
+\]
+denote the set of admissible Faithful voting profiles.
+
+For \(v\in\Omega\), define the vote count received by player \(j\) as
+\[
+C_j(v)
+=
+m\mathbf 1_{\{j=T^\ast\}}
++
+\sum_{i\in F}\mathbf 1_{\{v_i=j\}}.
+\]
+
+Let
+\[
+M(v)=\max_{j\in\{0,\dots,n-1\}} C_j(v)
+\]
+and define the set of tied winners
+\[
+W(v)=\{j : C_j(v)=M(v)\}.
+\]
+
+If ties are resolved uniformly at random, then the probability that the
+eliminated player is Faithful is
+\[
+p_F^{\mathrm{coll,RV}}(n,m)
+=
+\frac1{|\Omega|}
+\sum_{v\in\Omega}
+\frac{|W(v)\cap F|}{|W(v)|}.
+\]
+\end{lemma}
+
+\begin{proof}
+Under RV+C, every admissible Faithful
+voting profile \(v\in\Omega\) occurs with equal probability. Since each
+Faithful player may vote for any player except themselves, the sample
+space is precisely \(\Omega\), and hence
+\[
+\mathbb{P}(v)=\frac1{|\Omega|}
+\qquad
+\text{for all } v\in\Omega.
+\]
+
+For a fixed profile \(v\), the total number of votes received by player
+\(j\) is
+\[
+C_j(v)
+=
+m\mathbf 1_{\{j=T^\ast\}}
++
+\sum_{i\in F}\mathbf 1_{\{v_i=j\}},
+\]
+where the first term accounts for the colluding Traitor bloc and the
+second term counts Faithful votes.
+
+The players receiving the maximal number of votes are
+\[
+W(v)=\{j : C_j(v)=M(v)\},
+\]
+where
+\[
+M(v)=\max_j C_j(v).
+\]
+
+Because ties are broken uniformly at random, conditional on the profile
+\(v\), the probability that the eliminated player is Faithful equals
+\[
+\frac{|W(v)\cap F|}{|W(v)|}.
+\]
+
+Taking the expectation over all admissible voting profiles gives
+\[
+P_{\mathrm{faithful}}^{\mathrm{RV+C}}(n,m)
+=
+\sum_{v\in\Omega}
+\mathbb{P}(v)
+\frac{|W(v)\cap F|}{|W(v)|}.
+\]
+
+Since \(\mathbb{P}(v)=1/|\Omega|\) for all \(v\in\Omega\),
+\[
+p_F^{\mathrm{coll,RV}}(n,m)
+=
+\frac1{|\Omega|}
+\sum_{v\in\Omega}
+\frac{|W(v)\cap F|}{|W(v)|},
+\]
+as required.
+\end{proof}
+
+\subsection{Recurrences for RV+C and VL+Opt}\label{sec:recurrences}
+
+Lemma~\ref{lemma:collusion} replaces the uniform banishment probability
+\((n - m)/n\) of the Migda\l{} recurrence
+(Proposition~\ref{prop:migdal}) with a strategy-specific banishment
+probability. Adapting the recurrence accordingly characterises the
+Traitor win probability under RV+C and under \(\sigma^\dagger\) exactly.
+
+\begin{figure}[htbp!]
+\centering
+\includegraphics[width=\textwidth]{fig_strategy_progression.pdf}
+\caption{\textbf{Strategic game progression.} \textbf{Top row:} voting
+patterns under RV (random, uncoordinated), RV+C (random with Traitor
+collusion), and VL (cyclic Vote-Left). \textbf{Bottom row:} the Traitors'
+optimal response \(\sigma^\dagger\) (VL+Opt) branches on the credibility
+of Faithful punishment: when \(n > 2m + 2\) (left), Traitors comply with
+the cyclic pattern; when \(n \leq 2m + 2\) (right), the Faithful lack the
+numbers to punish, so Traitors collude. Arrows show votes
+(F = Faithful, blue; T = Traitor, red).}
+\label{fig:strategy_progression}
+\end{figure}
+
+\begin{proposition}[Traitor win probability under RV+C]\label{prop:rvc}
+Let \(w_{\ddagger}(n,m)\) denote the probability that at least one Traitor is
+among the (possibly tied) winners in a population of \(n\) players with
+\(m\) Traitors, under random voting with collusion (RV+C).
+
+Then:
+\[
+w_{\ddagger}(n,m)
+=
+\begin{cases}
+0 & m = 0, \\[6pt]
+1 & n \leq 2m, \\[6pt]
+p_F^{\mathrm{coll,RV}}(n,m)\, w_{\ddagger}(n-2,m)
++ \bigl(1 - p_F^{\mathrm{coll,RV}}(n,m)\bigr)\, w_{\ddagger}(n-2,m-1)
+& n > 2m.
+\end{cases}
+\]
+
+\end{proposition}
+
+\begin{proof} 
+Each round consists of a day-phase banishment followed by a night-phase murder.
+Under RV+C the Traitors collude every round, so the day-phase banishment is a
+Faithful with probability \(p_F^{\mathrm{coll, RV}}\) and a Traitor otherwise;
+the night phase always removes one further Faithful. The recurrence then follows
+from the law of total probability, exactly as in Proposition~\ref{prop:migdal}.
+\end{proof}
+
+\begin{proposition}[Traitor win probability under \(\sigma^\dagger\)]
+\label{prop:vlopt}
+Let \(w_{\dagger}(n, m)\) denote the Traitor win probability under
+Vote-Left with the optimal Traitor strategy \(\sigma^\dagger\), starting
+from state \((n, m)\). Then
+\[
+w_{\dagger}(n, m) \;=\;
+\begin{cases}
+0 & m = 0, \\[4pt]
+1 & n \leq 2m + 2, \\[4pt]
+\dfrac{n - m}{n}\, w_{\dagger}(n - 2,\, m)
+ + \dfrac{m}{n}\, w_{\dagger}(n - 2,\, m - 1)
+& n > 2m + 2.
+\end{cases}
+\]
+The recurrence differs from the Migda\l{} recurrence
+(Proposition~\ref{prop:migdal}) only in the late-game boundary: states
+with \(2m < n \leq 2m + 2\), which Migda\l{} continues to break down by
+weighted average, are absorbed by \(\sigma^\dagger\) into the
+Traitor-win region \(w_\dagger = 1\) because optimal collusion forces
+the Faithful banishment.
+\end{proposition}
+
+\begin{proof}
+For \(n > 2m + 2\) the Traitors comply with Vote-Left, so the
+day-phase banishment is uniform and the recurrence reduces to that of
+Proposition~\ref{prop:migdal}.
+\end{proof}
 
 \section{Numerical evaluation}\label{sec:sim}
 
 In this section we bring the exact analysis of
 Sections~\ref{sec:equilibrium} and~\ref{sec:timing} together with Monte
 Carlo simulation, in order to assess robustness across game sizes and to
-quantify how Vote-Left changes the Faithful's winning probability. All
-simulations were run using the \texttt{backstab} library. The simulation
-loop is shown in Figure~\ref{fig:simulation}; compliance outcomes match
-the exact \(w(n, m)\) values to within Monte Carlo error.
+quantify how Vote-Left changes the Faithful's winning probability. The
+simulation loop is shown in Figure~\ref{fig:simulation}; compliance
+outcomes match the exact \(w(n, m)\) values to within Monte Carlo error.
 
 \begin{figure}[htbp!]
 \centering
-\begin{tikzpicture}[
-  node distance=0.5cm,
-  box/.style={
-    rectangle, rounded corners=3pt, draw, thick,
-    minimum width=5.2cm, minimum height=0.72cm,
-    align=center, font=\small},
-  dec/.style={
-    diamond, draw, thick, aspect=2.5,
-    minimum width=4.6cm, align=center, font=\small},
-  res/.style={
-    rectangle, draw, thick, rounded corners=2pt,
-    minimum width=2.2cm, minimum height=0.60cm,
-    align=center, font=\small\itshape},
-  arr/.style={-Latex, thick},
-]
-  \node[box]  (init)
-      {Initialise: state \((n_t,\,m_t)\)};
-  \node[dec,  below=0.45cm of init]   (w1)
-      {\(m_t \geq \lceil n_t/2 \rceil\)?};
-  \node[box,  below=0.45cm of w1]     (day)
-      {\textbf{Day phase}\\
-       votes \(\sigma\); detect deviations;
-       banish plurality};
-  \node[dec,  below=0.45cm of day]    (w2)   {game over?};
-  \node[box,  below=0.45cm of w2]     (night)
-      {\textbf{Night phase}\\
-       Traitors murder one Faithful};
-  \node[res,  right=1.8cm of w1]  (Tw)   {Traitor win};
-  \node[res,  right=1.8cm of w2]  (Fw)   {Faithful win};
-  \node[res,  below right=0.3cm and 0.8cm of w2]  (Tw2)  {Traitor win};
-
-  \draw[arr] (init) -- (w1);
-  \draw[arr] (w1)   -- node[left,  font=\footnotesize]{no}  (day);
-  \draw[arr] (w1)   -- node[above, font=\footnotesize]{yes} (Tw);
-  \draw[arr] (day)  -- (w2);
-  \draw[arr] (w2)   -- node[left,  font=\footnotesize]{no}  (night);
-  \draw[arr] (w2.east) to[out=0, in=180]
-      node[above, font=\footnotesize]{\(m_t = 0\)}  (Fw.west);
-  \draw[arr] (w2.south east) to[out=-40, in=180]
-      node[below, font=\footnotesize]
-      {\(m_t \geq \lceil n_t/2 \rceil\)}            (Tw2.west);
-  \draw[arr] (night.west) -- ++(-1.8, 0) |- (w1.west);
-\end{tikzpicture}
-\caption{\textbf{Monte Carlo simulation loop in \texttt{backstab}.}
+\includegraphics[width=0.6\textwidth]{fig_simulation.pdf}
+\caption{\textbf{Monte Carlo simulation loop.}
 One pass of the inner loop simulates a single game of
-\(\mathrm{TG}(n, m)\). Win conditions are checked before the day phase
-and again after the day-phase banishment; the night phase follows
-whenever neither condition is met. The outer loop repeats for
-\(N_{\mathrm{sims}}\) independent games and aggregates outcomes into
-win rates and confidence intervals.}
+\(\mathrm{TG}(n, m)\). The parity win condition is checked before the
+day phase; if Traitors already hold parity the game ends immediately.
+During the day phase, votes are cast and any deviation from the
+prescribed protocol is detected: if a deviation is found the deviator
+is punished (all surviving players vote for them); otherwise the
+plurality winner is banished. Win conditions are checked again after
+banishment. The night phase follows whenever neither condition is met,
+and the loop continues. The outer loop repeats for \(N_{\mathrm{sims}}\)
+independent games and aggregates outcomes into win rates and confidence
+intervals.}
 \label{fig:simulation}
 \end{figure}
 
 \begin{figure}[hbtp!]
 \centering
 \includegraphics[width=\textwidth]{fig_strategy_comparison.pdf}
-\caption{\textbf{Strategy comparison.} \textbf{A,} Faithful win rate
-under four strategy profiles for \(\mathrm{TG}(22, 3)\), with 95\%
-confidence intervals over 15{,}000 simulations per bar. The dashed line
-is the exact value \(1 - w(22, 3) \approx 0.248\). RV and VL yield
-identical compliance outcomes; collusion under RV (RV+C) collapses the
-Faithful win rate to approximately 0.05, while Vote-Left with optimal
-Traitor deviation (\(\sigma^\dagger\), VL+Opt) still yields a Faithful
-win rate above 0.16. \textbf{B,} Faithful win rate under RV+C (orange)
-and VL+Opt (blue) across all televised game configurations. Vote-Left
-raises the Faithful win rate by a factor of approximately three or more
-in every configuration.}
+\caption{\textbf{Strategy comparison: Faithful win rate by strategy.}
+Each panel shows the Faithful win rate \(1 - w\) as a function of
+\(n\) for traitor counts \(m \in \{2, 3, 4, 5\}\).
+Where a closed-form recurrence exists, exact values are shown as
+crosses; simulated values (lines, with 95\% confidence intervals) are
+shown alongside for verification. \textbf{A,} Random Voting (RV):
+Faithful win rate under mutual random play. \textbf{B,} Random Voting
+with Collusion (RV+C): Traitors collude on a single Faithful target
+each round while Faithful vote at random; the Faithful win rate
+collapses sharply. \textbf{C,} Vote-Left with Collusion and detection
+(VL+C): Faithful follow the cyclic Vote-Left protocol; Traitors still
+attempt collusion but are detected and punished, raising the Faithful
+win rate above the RV+C baseline. \textbf{D,} Vote-Left with
+Compliance (VL+Comp): all players follow Vote-Left; Traitor win
+probability equals the Migda\l{} value, as expected. \textbf{E,}
+Vote-Left with Optimal Deviation (VL+Opt, \(\sigma^\dagger\)): Traitors
+comply in the main game and collude in the late-game phase
+\(n_t \leq 2m_t + 2\); Faithful win rate lies between the compliance
+and collusion baselines.}
 \label{fig:strategy}
 \end{figure}
 
-Figure~\ref{fig:strategy}A confirms that VL and RV produce identical
-compliance outcomes, both near \(0.25\) and matching the exact value of
-\(0.248\). Collusion under RV reduces the Faithful win rate to
-approximately \(0.06\), whereas deviation under VL raises it
-monotonically. Notably, even a constant deviation rate of \(p = 0.1\)
-already more than doubles the Faithful win rate
-(Figure~\ref{fig:strategy}B).
+Figure~\ref{fig:strategy}A--B shows that VL and RV produce identical
+compliance outcomes, matching the exact Migda\l{} value, while RV+C
+collapses the Faithful win rate. Figure~\ref{fig:strategy}C confirms
+that detection and punishment under VL+C substantially recovers the
+Faithful win rate relative to RV+C. Figure~\ref{fig:strategy}D--E
+shows that VL+Comp recovers the compliance baseline, and that
+\(\sigma^\dagger\) (VL+Opt) erodes it only modestly in the late-game
+phase. Figure~\ref{fig:strategy_ratios} quantifies how much the Traitor
+Nash equilibrium strategy \(\sigma^\dagger\) (VL+Opt) improves the
+Traitor position relative to each alternative.
 
 \begin{table}[htbp!]
 \centering
-\caption{Probability of a Traitor win across game configurations
-(15{,}000 simulations per cell; standard error \(\leq 0.004\), so the
-third decimal lies near the noise floor and should not be
-over-interpreted). \textbf{Exact} gives \(w(n, m)\) from the Migda\l{}
-recurrence; \textbf{RV} verifies this by simulation. \textbf{RV+C} is
-random voting against Traitor collusion. \textbf{VL+Opt} is Vote-Left
-against the optimal Traitor strategy \(\sigma^\dagger\). Lower values
-are better for the Faithful.}
+\caption{Traitor win probability across game configurations.
+\(w(n,m)\) is the exact Migda\l{} value
+(Proposition~\ref{prop:migdal}); \(w_{\ddagger}(n,m)\) is the exact
+value under RV+C from Lemma~\ref{lemma:collusion}, available for
+\(n \leq 10\); \(w_{\dagger}(n,m)\) is the exact value under
+VL+Opt (Proposition~\ref{prop:vlopt}). RV, RV+C, and VL+Opt are
+simulated values. The upper block shows small configurations for which
+\(w_{\ddagger}\) is available exactly; the lower block shows the
+televised range. Lower values are better for the Faithful.}
 \label{tab:paramsweep}
 \smallskip
-\begin{tabular}{@{}ccccc@{}}
-\toprule
-\((n, m)\) & Exact & RV & RV+C & VL+Opt \\
-\midrule
-(15, 2) & 0.570 & 0.568 & 0.721 & 0.681 \\
-(20, 3) & 0.776 & 0.777 & 0.956 & 0.864 \\
-(22, 3) & 0.752 & 0.754 & 0.947 & 0.839 \\
-(24, 3) & 0.731 & 0.736 & 0.936 & 0.816 \\
-(25, 3) & 0.625 & 0.623 & 0.907 & 0.731 \\
-(22, 4) & 0.864 & 0.860 & 0.998 & 0.929 \\
-(25, 4) & 0.754 & 0.752 & 0.997 & 0.845 \\
-\bottomrule
-\end{tabular}
+\input{tab_paramsweep}
 \end{table}
+
+\begin{figure}[htbp!]
+\centering
+\includegraphics[width=\textwidth]{fig_strategy_comparison_ratios.pdf}
+\caption{\textbf{Traitor gain from \(\sigma^\dagger\) (VL+Opt).}
+Each panel shows the ratio of the Faithful win rate under VL+Opt to
+that under an alternative strategy. Exact closed-form values are used
+where available; simulated values are used otherwise. Points are
+omitted where the simulated denominator records no Faithful wins.
+Values below one favour the Traitors; the dashed line marks equality.
+\textbf{A,} VL+Opt / RV: near but below one, confirming a small
+Traitor gain from optimal late-game deviation. \textbf{B,} VL+Opt /
+RV+C (\(y\)-axis log scale): substantially above one, showing that
+Vote-Left leaves the Faithful far better off than undetected collusion.
+\textbf{C,} VL+Opt / VL+C: below one, confirming that Traitors prefer
+\(\sigma^\dagger\) to a regime where collusion is always punished.
+\textbf{D,} VL+Opt / VL+Comp: below one, showing a modest but
+consistent Traitor gain over full compliance.}
+\label{fig:strategy_ratios}
+\end{figure}
 
 Table~\ref{tab:paramsweep} reports Traitor win probabilities at seven
 configurations spanning the televised range of \emph{The Traitors}.

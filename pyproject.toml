@@ -10,7 +10,10 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 keywords = ["game-theory", "simulation", "social-deduction"]
-dependencies = []
+dependencies = [
+    "jupyter>=1.1.1",
+    "seaborn>=0.13.2",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/backstab"]
@@ -20,6 +23,7 @@ tex = [
     "numpy>=1.26",
     "matplotlib>=3.8",
     "stet>=0.0.2",
+    "dvc>=3.0",
 ]
 dev = [
     "pytest>=8.0",

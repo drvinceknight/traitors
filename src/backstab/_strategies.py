@@ -1,6 +1,5 @@
 import random
 
-from backstab._analysis import deviation_is_profitable
 from backstab._types import PlayerID, RoundRecord
 
 
@@ -18,10 +17,10 @@ class FixedOrder:
         known_traitors: set[PlayerID],
     ) -> PlayerID:
         alive_set = set(alive)
-        idx = seating.index(voter)
+        voter_seat_index = seating.index(voter)
         seating_size = len(seating)
         for step in range(1, seating_size):
-            candidate = seating[(idx + step) % seating_size]
+            candidate = seating[(voter_seat_index + step) % seating_size]
             if candidate in alive_set and candidate != voter:
                 return candidate
 
@@ -71,7 +70,11 @@ class Collusion:
         if is_traitor is False:
             return random.choice([player for player in alive if player != voter])
         round_number = len(history)
-        if round_number != self._round:
+        if (
+            round_number != self._round
+            or self._target not in alive
+            or self._target in traitors
+        ):
             faithful_players = [player for player in alive if player not in traitors]
             self._target = random.choice(faithful_players)
             self._round = round_number
@@ -153,9 +156,9 @@ class RampDeviation:
         """Interpolate deviation probability based on fraction of game elapsed."""
         if self.n_total <= 2:
             return self.p_end
-        frac = (self.n_total - n_alive) / (self.n_total - 2)
-        frac = max(0.0, min(1.0, frac))
-        return self.p_start + frac * (self.p_end - self.p_start)
+        game_progress_fraction = (self.n_total - n_alive) / (self.n_total - 2)
+        game_progress_fraction = max(0.0, min(1.0, game_progress_fraction))
+        return self.p_start + game_progress_fraction * (self.p_end - self.p_start)
 
     def vote(
         self,
@@ -235,22 +238,23 @@ class ThresholdDeviation:
 class OptimalTimingDeviation:
     """Deviate only when exact payoff analysis predicts it is profitable.
 
-    Deviates when deviate_value(n, m) > comply_value(n, m).
+    Deviates when n <= 2m + 2
     Faithful always play FixedOrder.
     """
 
     def __init__(self) -> None:
         self._fixed_order = FixedOrder()
+        self._collusion = Collusion()
 
     def vote(
         self,
         voter: PlayerID,
-        alive: list[PlayerID],
-        seating: list[PlayerID],
-        traitors: set[PlayerID],
+        alive: list[playerid],
+        seating: list[playerid],
+        traitors: set[playerid],
         is_traitor: bool,
-        history: list[RoundRecord],
-        known_traitors: set[PlayerID],
+        history: list[roundrecord],
+        known_traitors: set[playerid],
     ) -> PlayerID:
         if is_traitor is False:
             return self._fixed_order.vote(
@@ -258,12 +262,14 @@ class OptimalTimingDeviation:
             )
         n_alive = len(alive)
         n_traitors_alive = sum(1 for player in alive if player in traitors)
-        if deviation_is_profitable(n_alive, n_traitors_alive):
+        if n_alive <= 2 * n_traitors_alive + 2:
             faithful_players = [
                 player for player in alive if player not in traitors and player != voter
             ]
             if len(faithful_players) > 0:
-                return random.choice(faithful_players)
+                return self._collusion.vote(
+                    voter, alive, seating, traitors, is_traitor, history, known_traitors
+                )
         return self._fixed_order.vote(
             voter, alive, seating, traitors, is_traitor, history, known_traitors
         )

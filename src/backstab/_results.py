@@ -33,11 +33,14 @@ class SimulationResults:
     @property
     def ci_95(self) -> tuple[float, float]:
         """Wilson score 95% CI for faithful_win_rate."""
-        p, n = self.faithful_win_rate, self.n_simulations
-        if n == 0:
+        win_rate, sample_count = self.faithful_win_rate, self.n_simulations
+        if sample_count == 0:
             return (0.0, 0.0)
-        se = math.sqrt(p * (1 - p) / n)
-        return (max(0.0, p - 1.96 * se), min(1.0, p + 1.96 * se))
+        standard_error = math.sqrt(win_rate * (1 - win_rate) / sample_count)
+        return (
+            max(0.0, win_rate - 1.96 * standard_error),
+            min(1.0, win_rate + 1.96 * standard_error),
+        )
 
     def __repr__(self) -> str:
         lower, upper = self.ci_95
