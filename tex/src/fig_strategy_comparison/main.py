@@ -1,8 +1,8 @@
 """Strategy comparison fig.
 
-Panel A: For RV/VL: Faithful win rate for m=2, 3, 4 across n=3..25 with exact values for n<=12.
-Panel B: For RV+Col: Faithful win rate for m=2, 3, 4 across n=3..25 with exact values for n<=12 (copy 1).
-Panel C: For VL+Opt: Faithful win rate for m=2, 3, 4 across n=3..25 with exact values for n<=12 (copy 2).
+Panel A: For RV/VL: Faithful win rate for m=2, 3, 4 across n=3..25 with exact values for n<12.
+Panel B: For RV+Col: Faithful win rate for m=2, 3, 4 across n=3..25 with exact values for n<12 (copy 1).
+Panel C: For VL+Opt: Faithful win rate for m=2, 3, 4 across n=3..25 with exact values for n<12 (copy 2).
 Panel D: heatmap of w / w_‡ (Traitors' first move: Collusion, RV+C).
 Panel E: heatmap of w / w_† (Traitors' final response: sigma^dagger).
 
@@ -174,7 +174,7 @@ def generate(
         "Vote Left with Compliance",
         "Vote Left with Optimal Deviation",
     ),
-    exact_n_upper_bound=12,
+    exact_n_upper_bound=11,
 ):
     for n, m, strategy_profile in itertools.product(
         n_values,

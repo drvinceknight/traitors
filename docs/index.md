@@ -4,7 +4,7 @@
 of social deduction games in the Traitors/Mafia/Werewolf family.
 
 It accompanies the paper "The Vote-Left Equilibrium: A Deterministic Coordination
-Strategy for the Faithful in Social Deduction Games."
+Strategy for the Faithful in The Traitors."
 
 ---
 

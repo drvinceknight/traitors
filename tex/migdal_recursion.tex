@@ -77,11 +77,6 @@
     % \node[tnode, minimum size=10pt] at (3.35, 0.25) {T};
     % \node[font=\sffamily\tiny, text=traitor, anchor=west] at (3.55, 0.25) {Traitor};
 
-    % Player numbers
-    \foreach \i in {1,...,8} {
-        \pgfmathsetmacro{\angle}{90 - (\i-1)*45}
-        \node[font=\sffamily\tiny, text=black!40] at ($(CA) + (\angle:\R+0.3)$) {\i};
-    }
 \end{scope}
 
 % ── Panel B: Night (Murder) ──
