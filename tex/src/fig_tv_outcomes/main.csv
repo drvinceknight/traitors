@@ -1,0 +1,84 @@
+Country,Season,Traitor Win,Number in last round
+Australia,1,True,1
+Australia,2,None,3
+Belgium (Flanders),1,False,19 
+Belgium (Flanders),2,True,2
+Belgium (Flanders),3,True,3
+Belgium (Flanders),4,False,3
+Belgium (Wallonia),1,False,2
+Belgium (Wallonia),2,True,1
+Belgium (Wallonia),3,True,1
+Bulgaria,1,False,4
+Canada,1,True,1
+Canada,2,True,1
+Canada,3,False,2
+Canada (Quebec),1,False,3
+Canada (Quebec),1,False,2
+Czech Republic,1,True,1
+Czech Republic,2,True,1
+Denmark,1,True,1
+Denmark,2,False,3
+Denmark,3,True,1
+Denmark,4,False,2
+Denmark,5,False,3
+Finland,1,True,2
+Finland,2,False,3
+Finland,3,True,3
+Finland,4,False,2
+France,1,True,2
+France,2,True,1
+France,3,True,2
+France,4,False,3
+France,5,True,1
+France,6,False,3
+Germany,1,True,2
+Germany,2,True,2
+Germany,3,True,3
+Greece,1,True,1
+Hungary,1,False,3
+Hungary,2,False,3
+Hungary,3,True,1
+Hungary,4,False,2
+India,1,False,2
+Ireland,1,False,3
+Israel,1,True,1
+Italy,1,True,1
+Netherlands,1,None,2
+Netherlands,2,True,2
+Netherlands,3,False,3
+Netherlands,4,False,3
+Netherlands,5,False,3
+Netherlands,6,True,1
+Netherlands,7,True,1
+Netherlands,8,True,1
+Netherlands,9,False,2
+Netherlands,10,True,2
+New Zealand,1,False,2
+New Zealand,2,True,1
+Norway,1,True,2
+Norway,2,True,1
+Norway,3,False,2
+Norway,4,True,1
+Norway,5,True,2
+Poland,1,False,2
+Poland,2,True,3
+Portugal,1,True,2
+Romania,1,True,1
+Russia,1,None,2
+Russia,2,True,1
+Spain,1,False,2
+Spain,2,False,2
+Sweden,1,True,1
+Sweden,2,True,3
+Sweden,3,False,2
+Sweden,4,True,1
+Ukraine,1,True,1
+UK,1,False,3
+UK,2,True,1
+UK,3,False,2
+UK,4,True,1
+UK,5,True,2
+US,1,True,1
+US,2,False,2
+US,3,False,4
+US,4,True,1

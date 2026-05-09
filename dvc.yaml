@@ -1,0 +1,18 @@
+stages:
+  fig_tv_outcomes:
+    cmd: uv run python tex/src/fig_tv_outcomes/main.py
+    deps:
+      - tex/src/fig_tv_outcomes/main.py
+      - tex/src/fig_tv_outcomes/main.csv
+    outs:
+      - tex/fig_tv_outcomes.pdf
+
+  fig_strategy_comparison:
+    cmd: uv run python tex/src/fig_strategy_comparison/main.py
+    deps:
+      - tex/src/fig_strategy_comparison/main.py
+    outs:
+      - tex/fig_strategy_comparison.pdf
+      - tex/fig_strategy_comparison_ratios.pdf
+      - tex/tab_paramsweep.tex
+
