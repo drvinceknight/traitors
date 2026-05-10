@@ -36,7 +36,7 @@ dev = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--doctest-glob='*.md' --cov=backstab --cov-report=term-missing"
+addopts = "--doctest-glob='*.md' --cov=backstab --cov-report=term-missing --cov-fail-under=100"
 
 [tool.ruff]
 line-length = 88

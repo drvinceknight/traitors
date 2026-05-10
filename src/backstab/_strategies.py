@@ -23,6 +23,7 @@ class FixedOrder:
             candidate = seating[(voter_seat_index + step) % seating_size]
             if candidate in alive_set and candidate != voter:
                 return candidate
+        raise ValueError(f"No valid vote target found for voter {voter}")  # pragma: no cover
 
     def __repr__(self) -> str:
         return "FixedOrder()"
@@ -249,12 +250,12 @@ class OptimalTimingDeviation:
     def vote(
         self,
         voter: PlayerID,
-        alive: list[playerid],
-        seating: list[playerid],
-        traitors: set[playerid],
+        alive: list[PlayerID],
+        seating: list[PlayerID],
+        traitors: set[PlayerID],
         is_traitor: bool,
-        history: list[roundrecord],
-        known_traitors: set[playerid],
+        history: list[RoundRecord],
+        known_traitors: set[PlayerID],
     ) -> PlayerID:
         if is_traitor is False:
             return self._fixed_order.vote(

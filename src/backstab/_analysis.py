@@ -56,10 +56,10 @@ def traitor_win_prob(n: int, m: int) -> Fraction:
 
 @functools.cache
 def _p_faithful_rv_collusion(n: int, m: int) -> Fraction:
-    if m == 0:
+    if m == 0:  # pragma: no cover
         return Fraction(1)
     n_faithful = n - m
-    if n_faithful == 0:
+    if n_faithful == 0:  # pragma: no cover
         return Fraction(0)
 
     players = list(range(n))
