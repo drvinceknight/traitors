@@ -414,7 +414,7 @@ def test_optimal_timing_traitor_voting_gives_fixed_order_above_threshold():
         assert optimal_timing_deviation_vote == traitor + 1
 
 
-def test_optimal_timing_traitor_voting_gives_fixed_order_above_threshold_for_4_traitors():
+def test_optimal_timing_traitor_voting_gives_fixed_order_above_threshold_for_4_t():
     optimal_timing_deviation = backstab.OptimalTimingDeviation()
     traitors = {0, 1, 2, 3}
     alive = list(range(11))
@@ -448,9 +448,9 @@ def test_optimal_timing_traitor_voting_gives_collusion_below_threshold_for_2_tra
         )
         traitor_votes.add(optimal_timing_deviation_vote)
 
-    assert (len(traitor_votes) == 1) and (
-        traitor_votes & traitors == set()
-    ), f"Traitor votes {traitor_votes}"
+    assert (len(traitor_votes) == 1) and (traitor_votes & traitors == set()), (
+        f"Traitor votes {traitor_votes}"
+    )
 
 
 def test_optimal_timing_traitor_voting_gives_collusion_below_threshold_for_4_traitors():

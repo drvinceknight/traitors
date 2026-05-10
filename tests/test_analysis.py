@@ -1,7 +1,7 @@
 """Tests for exact win probabilities and deviation analysis."""
 
-import math
 import fractions
+import math
 
 import backstab
 

@@ -62,9 +62,10 @@ def test_vl_matches_rv():
         n=5000,
         seed=42,
     )
-    assert abs(
-        random_vote_result.faithful_win_rate - fixed_order_result.faithful_win_rate
-    ) < 0.05
+    assert (
+        abs(random_vote_result.faithful_win_rate - fixed_order_result.faithful_win_rate)
+        < 0.05
+    )
 
 
 def test_collusion_hurts_faithful():

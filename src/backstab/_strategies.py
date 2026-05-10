@@ -23,7 +23,9 @@ class FixedOrder:
             candidate = seating[(voter_seat_index + step) % seating_size]
             if candidate in alive_set and candidate != voter:
                 return candidate
-        raise ValueError(f"No valid vote target found for voter {voter}")  # pragma: no cover
+        raise ValueError(  # pragma: no cover
+            f"No valid vote target found for voter {voter}"
+        )
 
     def __repr__(self) -> str:
         return "FixedOrder()"
