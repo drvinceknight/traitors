@@ -3,36 +3,36 @@ stages:
   fig_tv_outcomes:
     cmd: uv run python tex/src/fig_tv_outcomes/main.py
     deps:
-    - path: tex/src/_common.py
-      hash: md5
-      md5: 2978789d85f353d344e998bd9988fe05
-      size: 2976
     - path: tex/src/fig_tv_outcomes/main.csv
       hash: md5
       md5: 7f257fb99709f0e4f12a51df8b568236
       size: 1579
     - path: tex/src/fig_tv_outcomes/main.py
       hash: md5
-      md5: 6e8f68bd5a73b41dda3c09f3366654de
-      size: 1635
+      md5: 37aa2bc8a053a41ed0eb4a064410dbce
+      size: 2423
     outs:
     - path: tex/fig_tv_outcomes.pdf
       hash: md5
-      md5: 2dc19dab7bd9351d9b6d512f74ef6e86
-      size: 24917
+      md5: 8165460bc83f06c36c58990868a66ef6
+      size: 28903
   fig_strategy_comparison:
     cmd: uv run python tex/src/fig_strategy_comparison/main.py
     deps:
-    - path: tex/src/_common.py
-      hash: md5
-      md5: 8ecf09a9b5d1bee96a6e78ae7b07cb5d
-      size: 3000
     - path: tex/src/fig_strategy_comparison/main.py
       hash: md5
-      md5: 65e5a799370bd152d64e21b75a14c0bd
-      size: 12867
+      md5: 45a6f0e71ad50af4466df153383d9fd0
+      size: 15161
     outs:
     - path: tex/fig_strategy_comparison.pdf
       hash: md5
-      md5: 3f19db0a973102c21d0f4d1df18ec6e0
-      size: 45729
+      md5: e3f1846049bdcaba73656ef0e79cd39f
+      size: 54621
+    - path: tex/fig_strategy_comparison_ratios.pdf
+      hash: md5
+      md5: 28051052bfa3f8536ed4b995bac96fa6
+      size: 24973
+    - path: tex/tab_paramsweep.tex
+      hash: md5
+      md5: 7b0ae47e8874bfa0275bd344692679b5
+      size: 969
