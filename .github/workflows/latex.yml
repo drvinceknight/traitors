@@ -1,0 +1,39 @@
+name: LaTeX
+
+on:
+  pull_request:
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+
+      - name: Install Python dependencies
+        run: uv sync
+
+      - name: Generate figures
+        run: uv run dvc repro
+
+      - name: Install TeX Live
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-full python3-pygments biber
+
+      - name: Compile paper
+        working-directory: tex
+        run: |
+          pdflatex -shell-escape -interaction=nonstopmode main.tex
+          bibtex main
+          pdflatex -shell-escape -interaction=nonstopmode main.tex
+          pdflatex -shell-escape -interaction=nonstopmode main.tex
+
+      - name: Compile slides
+        working-directory: tex/deck
+        run: |
+          pdflatex -shell-escape -interaction=nonstopmode main.tex
+          biber main
+          pdflatex -shell-escape -interaction=nonstopmode main.tex
+          pdflatex -shell-escape -interaction=nonstopmode main.tex
