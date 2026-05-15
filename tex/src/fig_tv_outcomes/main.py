@@ -9,6 +9,7 @@ from __future__ import annotations
 import pathlib
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import seaborn as sns
@@ -19,11 +20,11 @@ TEX_DIR = pathlib.Path(__file__).resolve().parent.parent.parent
 plt.rcParams.update(
     {
         "font.family": "serif",
-        "font.size": 9,
-        "axes.titlesize": 9,
-        "axes.labelsize": 9,
-        "xtick.labelsize": 8,
-        "ytick.labelsize": 8,
+        "font.size": 20,
+        "axes.titlesize": 20,
+        "axes.labelsize": 15,
+        "xtick.labelsize": 15,
+        "ytick.labelsize": 15,
         "legend.fontsize": 8,
         "figure.dpi": 300,
         "savefig.dpi": 300,
@@ -46,10 +47,7 @@ OUT = TEX_DIR / "fig_tv_outcomes.pdf"
 df = pd.read_csv(pathlib.Path(__file__).parent / "main.csv")
 
 win_rates = (
-    df.groupby("Country")["Traitor Win"]
-    .value_counts(dropna=False)
-    .unstack()
-    .fillna(0)
+    df.groupby("Country")["Traitor Win"].value_counts(dropna=False).unstack().fillna(0)
 )
 
 traitor_win_rates = win_rates[True] / (win_rates[True] + win_rates[False])
@@ -62,23 +60,24 @@ average_win_rate = (
 new_labels = [f"{country} ({rate:.0%})" for country, rate in traitor_win_rates.items()]
 
 colors = sns.color_palette("colorblind", 3)  # Blue, Orange, Green
-ax = win_rates.plot(kind="bar", stacked=True, figsize=(14, 7), color=colors)
+with plt.style.context("Solarize_Light2"):
+    ax = win_rates.plot(kind="bar", stacked=True, figsize=(14, 7), color=colors)
 
-plt.title("Traitor Win Probability ($P(T)$) by Country", fontsize=14, pad=20)
-plt.ylabel(f"Number of Seasons (Total: {total_number_of_seasons})", fontsize=12)
-plt.xlabel(f"Country ($P(T)=${average_win_rate:.1f}%)", fontsize=12)
+    plt.title("Traitor Win Probability ($P(T)$) by Country", fontsize=14, pad=20)
+    plt.ylabel(f"Number of Seasons (Total: {total_number_of_seasons})", fontsize=12)
+    plt.xlabel(f"Country ($P(T)=${average_win_rate:.1f}%)", fontsize=12)
 
-ax.set_xticklabels(new_labels, rotation=45, ha="right", fontsize=10)
+    ax.set_xticklabels(new_labels, rotation=45, ha="right", fontsize=10)
 
-plt.legend(
-    title="Winner",
-    labels=[
-        f"Traitor Win (Total: {int(win_rates[True].sum())})",
-        "Shared",
-        f"Faithful Win (Total: {int(win_rates[False].sum())})",
-    ],
-    fontsize=10,
-)
+    plt.legend(
+        title="Winner",
+        labels=[
+            f"Traitor Win (Total: {int(win_rates[True].sum())})",
+            "Shared",
+            f"Faithful Win (Total: {int(win_rates[False].sum())})",
+        ],
+        fontsize=10,
+    )
 
-plt.tight_layout()
-plt.savefig(OUT)
+    plt.tight_layout()
+    plt.savefig(OUT)
