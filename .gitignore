@@ -35,8 +35,6 @@ tex/*.toc
 tex/*.lof
 tex/*.lot
 
-# Generated figures and simulation data (reproducible from tex/main.py)
-tex/*.pdf
 tex/*.png
 tex/data/
 
