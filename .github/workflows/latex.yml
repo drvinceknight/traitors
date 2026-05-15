@@ -12,7 +12,15 @@ jobs:
       - name: Install TeX Live
         run: |
           sudo apt-get update
-          sudo apt-get install -y texlive-full python3-pygments biber
+          sudo apt-get install -y \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-science \
+            texlive-pictures \
+            texlive-bibtex-extra \
+            biber \
+            python3-pygments
 
       - name: Compile paper
         working-directory: tex
