@@ -9,14 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: astral-sh/setup-uv@v5
-
-      - name: Install Python dependencies
-        run: uv sync
-
-      - name: Generate figures
-        run: uv run dvc repro
-
       - name: Install TeX Live
         run: |
           sudo apt-get update
