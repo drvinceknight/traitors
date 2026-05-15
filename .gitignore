@@ -55,3 +55,17 @@ site/
 # Data
 tex/src/fig_strategy_comparison/main.csv
 tex/src/fig_strategy_comparison/store.csv
+
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.nav
+*.out
+*.run.xml
+*.snm
+*.toc
+*.vrb
+*.xdv
+*.aux

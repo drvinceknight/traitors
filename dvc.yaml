@@ -16,3 +16,24 @@ stages:
       - tex/fig_strategy_comparison_ratios.pdf
       - tex/tab_paramsweep.tex
 
+  deck_fig_tv_outcomes:
+    cmd: uv run python tex/deck/src/fig_tv_outcomes/main.py
+    deps:
+      - tex/deck/src/fig_tv_outcomes/main.py
+      - tex/src/fig_tv_outcomes/main.csv
+    outs:
+      - tex/deck/fig_tv_outcomes.pdf
+
+  deck_fig_strategy_comparison:
+    cmd: uv run python tex/deck/src/fig_strategy_comparison/main.py
+    deps:
+      - tex/deck/src/fig_strategy_comparison/main.py
+      - tex/src/fig_strategy_comparison/main.csv
+    outs:
+      - tex/deck/fig_w_rv.pdf
+      - tex/deck/fig_w_rvc.pdf
+      - tex/deck/fig_w_vlc.pdf
+      - tex/deck/fig_w_vlcomp.pdf
+      - tex/deck/fig_w_vlopt.pdf
+      - tex/deck/fig_ratio_vlopt_rvc.pdf
+
