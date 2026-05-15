@@ -1,0 +1,26 @@
+name: LaTeX
+
+on:
+  pull_request:
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile paper
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: tex
+          args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode -shell-escape
+          extra_system_packages: py3-pygments
+
+      - name: Compile slides
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: tex/deck
+          args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode -shell-escape
+          extra_system_packages: py3-pygments
